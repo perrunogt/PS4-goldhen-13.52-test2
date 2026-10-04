@@ -88,14 +88,8 @@ body::after {
 }
 
 @keyframes glow {
-    from {
-        opacity: 0.35;
-        transform: scaleX(0.75);
-    }
-    to {
-        opacity: 1;
-        transform: scaleX(1);
-    }
+    from { opacity: 0.35; transform: scaleX(0.75); }
+    to { opacity: 1; transform: scaleX(1); }
 }
 
 @media (max-width: 600px) {
@@ -104,60 +98,49 @@ body::after {
         padding: 25px 18px;
         font-size: 16px;
     }
-    .info::before {
-        font-size: 10px;
-    }
+    .info::before { font-size: 10px; }
 }
 </style>
 </head>
 
 <body>
-<div id="msgs" class="info">Descargando cache ... 0%</div>
+<div id="msgs" class="info">Guardando cache ... 0%</div>
 
 <script>
 (function() {
     var msgs = document.getElementById("msgs");
     var ac = window.applicationCache;
 
+    function goHome() {
+        msgs.innerHTML = "perrunoGT &middot; Cache OK";
+        setTimeout(function() {
+            location.replace("index.html" + location.search);
+        }, 1200);
+    }
+
     function DLProgress(e) {
         if (e && e.total) {
             var pct = Math.round((e.loaded / e.total) * 100);
             msgs.innerHTML = "Descargando cache ... " + pct + "%";
         } else {
-            msgs.innerHTML = "Guardando archivos en cache...";
+            msgs.innerHTML = "Guardando datos...";
         }
     }
 
-    function DisplayCacheProgress() {
-        try { ac.swapCache(); } catch (err) {}
-        msgs.innerHTML = "perrunoGT &middot; Cache OK";
-        setTimeout(function() {
-            location.replace("index.html" + location.search);
-        }, 1500);
-    }
-
     if (!ac) {
-        location.replace("index.html" + location.search);
+        goHome();
         return;
     }
 
     ac.addEventListener("progress", DLProgress, false);
-    ac.addEventListener("cached", DisplayCacheProgress, false);
-    ac.addEventListener("updateready", DisplayCacheProgress, false);
-
-    ac.addEventListener("noupdate", function() {
-        msgs.innerHTML = "perrunoGT &middot; Cache al día";
-        setTimeout(function() {
-            location.replace("index.html" + location.search);
-        }, 1000);
+    ac.addEventListener("cached", goHome, false);
+    ac.addEventListener("updateready", function() {
+        try { ac.swapCache(); } catch (e) {}
+        goHome();
     }, false);
 
-    ac.addEventListener("error", function() {
-        msgs.innerHTML = "perrunoGT &middot; Cache lista (Offline)";
-        setTimeout(function() {
-            location.replace("index.html" + location.search);
-        }, 1000);
-    }, false);
+    ac.addEventListener("noupdate", goHome, false);
+    ac.addEventListener("error", goHome, false);
 })();
 </script>
 </body>
