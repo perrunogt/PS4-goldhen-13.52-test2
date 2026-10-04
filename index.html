@@ -1,203 +1,139 @@
-<html manifest="cache.appcache">
+<!DOCTYPE html>
+<html lang="es" manifest="cache.appcache">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>perrunoGT</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PERRUNOGT HOST | PS4 Jailbreak</title>
 <style>
-html, body {
-    width: 100%;
-    height: 100%;
-}
-
-body {
-    background-color: #020604;
-    color: #dfffea;
-    font: 15px/1.5 monospace;
+  * { box-sizing: border-box; }
+  html, body {
     margin: 0;
+    padding: 0;
+    height: 100vh;
+    background: #090b0e;
+    background: radial-gradient(circle at top, #121824 0%, #08090c 100%);
+    color: #e2e8f0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     overflow: hidden;
-    text-align: center;
-}
+  }
 
-/* Solo presentación; no cambia la estructura usada por el script. */
-body:before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-
-    background:
-        radial-gradient(circle at 50% 45%, rgba(0,255,136,0.10), transparent 45%);
-
-    pointer-events: none;
-}
-
-#console {
-    position: absolute;
-
-    top: 50%;
-    left: 50%;
-
-    width: 80%;
-    max-width: 700px;
-
-    max-height: 55%;
-
-    padding: 28px;
-
-    margin: 0;
-
-    transform: translate(-50%, -50%);
-
-    font-family: monospace;
-    font-size: 14px;
-    line-height: 1.8;
-
-    white-space: pre-wrap;
-    overflow: auto;
-
-    text-align: left;
-
-    color: #dfffea;
-
-    background-color: rgba(2,12,7,0.94);
-
-    border: 1px solid rgba(0,255,136,0.30);
+  .card {
+    background: rgba(18, 24, 38, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
     border-radius: 16px;
+    padding: 28px 24px;
+    width: 90%;
+    max-width: 440px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 210, 255, 0.05);
+    text-align: center;
+  }
 
-    box-shadow:
-        0 0 45px rgba(0,255,136,0.08),
-        0 20px 60px rgba(0,0,0,0.65);
+  .brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
 
-    z-index: 2;
-}
+  .brand img {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    margin-right: 12px;
+    border: 2px solid #00d2ff;
+    box-shadow: 0 0 10px rgba(0, 210, 255, 0.3);
+  }
 
-#console:before {
-    content: "PERRUNOGT // PS4 HOST";
+  .brand b {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
 
-    display: block;
+  #state {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 12px 0 6px;
+    letter-spacing: 0.02em;
+    min-height: 26px;
+  }
 
-    margin-bottom: 18px;
-    padding-bottom: 10px;
-
-    color: #00ff88;
-
+  #det {
     font-size: 13px;
-    font-weight: bold;
+    color: #94a3b8;
+    margin-bottom: 14px;
+  }
 
-    letter-spacing: 0.14em;
+  #det b {
+    color: #f1f5f9;
+    font-weight: 600;
+  }
 
-    border-bottom: 1px solid rgba(0,255,136,0.18);
+  #cache {
+    font-size: 12px;
+    color: #64748b;
+    min-height: 18px;
+    font-weight: 500;
+  }
 
-    text-shadow: 0 0 10px rgba(0,255,136,0.5);
-}
+  #cache.cacheok { color: #34d399; }
+  .ok { color: #34d399; } 
+  .bad { color: #f87171; } 
+  .warn { color: #fbbf24; }
 
-.ok {
-    color: #00ff88;
-    text-shadow: 0 0 8px rgba(0,255,136,0.45);
-}
-
-.bad {
-    color: #ff405d;
-    text-shadow: 0 0 8px rgba(255,64,93,0.40);
-}
-
-.warn {
-    color: #b8ff52;
-    text-shadow: 0 0 8px rgba(184,255,82,0.35);
-}
-
-#console::-webkit-scrollbar {
-    width: 5px;
-}
-
-#console::-webkit-scrollbar-thumb {
-    background: #00b968;
-    border-radius: 10px;
-}
-
-body:after {
-    content: "";
-
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-
-    height: 1px;
-
-    background: rgba(0,255,136,0.18);
-
-    box-shadow: 0 0 10px rgba(0,255,136,0.35);
-
-    animation: scan 5s linear infinite;
-
-    pointer-events: none;
-    z-index: 5;
-}
-
-@keyframes scan {
-    0% {
-        top: 0;
-        opacity: 0;
-    }
-
-    10% {
-        opacity: 1;
-    }
-
-    90% {
-        opacity: 1;
-    }
-
-    100% {
-        top: 100%;
-        opacity: 0;
-    }
-}
-
-@media (max-width: 600px) {
-    #console {
-        width: 82%;
-        padding: 20px;
-        font-size: 12px;
-    }
-
-    #console:before {
-        font-size: 10px;
-    }
-}
+  .status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-left: 6px;
+    background: rgba(255, 255, 255, 0.05);
+  }
 </style>
-
-<script>
-if (window.applicationCache && window.applicationCache.status == 0) {
-    window.location.replace("cache.html");
-}
-</script>
 </head>
-
 <body>
-    perrunoGT · PS4 Exploit<br>
-    © 2026 perrunoGT<br>
-    <br>
-    <pre id="console"></pre>
-</body>
+
+<div class="card">
+  <div class="brand">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAA3tUlEQVR42t29d5xV5bn3/b3v1XaZmT3MDG2Gjoo0KQJSREHAEvuJYowxia9503NSjq9PmtEkGp9TzJNzTo6aclLURANJNBELIgIqVRAQkI44Q2f67LLqfb9/7L3HYZiBQUly8uzPZ39mZs1ea691XffVfle5BX/Dl9ZaAhKIhBC6eFwIgVJqYBiGI48cOTI6Foudb9v2kCiKqtva2ipbWlpKwjCMKaVMIQSGYYSGYbi+76czmUxDNps95Pv+/ubm5h1tbW3bGhsbt99zzz11nb5bLF++3Fi+fLn67ne/q/5WNBB/A6KLAtG1EEJ1OD44l8tN9zzv0kwmMymKonOAVBAEKKUIwxClFFEUEYYhWut2ZhWYgGVZaK2 residential host code base64..." alt="PERRUNOGT Logo">
+    <b>PERRUNOGT HOST</b>
+  </div>
+
+  <div id="state">Detectando firmware...</div>
+  <div id="det"></div>
+  <div id="cache"></div>
+</div>
 
 <script>
 (function () {
-    var con = document.getElementById("console");
+    var stateEl = document.getElementById("state");
+    var detEl = document.getElementById("det");
+    var cacheEl = document.getElementById("cache");
 
-    function print(msg, cls) {
-        var span = document.createElement("span");
-        if (cls) span.className = cls;
-        span.textContent = msg + "\n";
-        con.appendChild(span);
+    function setState(t, c) { 
+        stateEl.textContent = t; 
+        stateEl.className = c || ""; 
+    }
+    
+    function setCache(t, ok) { 
+        cacheEl.textContent = t; 
+        cacheEl.className = ok ? "cacheok" : ""; 
     }
 
-    var params = new URLSearchParams(location.search);
+    var queryString = location.search || "";
 
+    // Firmwares soportados por la tabla del kernel (13.02, 13.04, 13.50, 13.52)
     var SUPPORTED = { 1302: 1, 1304: 1, 1350: 1, 1352: 1 };
 
     var key = null, fwnum = null;
@@ -209,33 +145,34 @@ if (window.applicationCache && window.applicationCache.status == 0) {
         fwnum = parseInt(m[1], 10) * 100 + parseInt(ms, 10);
     }
 
-    var forced    = params.get("force") === "1";
+    var forced = /(?:\?|&)force=1(?:&|$)/.test(queryString);
     var supported = forced || (fwnum !== null && SUPPORTED[fwnum] === 1);
 
-    print("firmware: " + (key || "unknown"));
-    print("supported: " + (supported ? "yes" : "no"), supported ? "ok" : "bad");
+    detEl.innerHTML = "Firmware: <b>" + (key || "Desconocido") + "</b> " 
+        + (supported ? "<span class='status-badge ok'>Soportado</span>" 
+                    : "<span class='status-badge bad'>No medido</span>");
 
     var target = "jb.html" + location.search;
 
-    function go() {
-        print("loading exploit...", "warn");
-        location.replace(target);
+    function go() { 
+        setState("Cargando Jailbreak...", "warn"); 
+        location.replace(target); 
     }
 
     function waitForTap(msg, action) {
-        print(msg, "warn");
+        setState(msg, "warn");
         function fire() {
-            window.removeEventListener("click",   fire);
+            window.removeEventListener("click", fire);
             window.removeEventListener("keydown", fire);
             action();
         }
-        window.addEventListener("click",   fire);
+        window.addEventListener("click", fire);
         window.addEventListener("keydown", fire);
     }
 
     if (!supported) {
-        print("UNSUPPORTED FIRMWARE — tap / press X to run anyway", "bad");
-        waitForTap("", go);
+        setState("FIRMWARE NO COMPATIBLE", "bad");
+        waitForTap("SISTEMA (" + (key || "Desconocido") + ") — Presiona X o toca para forzar ejecucion", go);
         return;
     }
 
@@ -243,46 +180,45 @@ if (window.applicationCache && window.applicationCache.status == 0) {
     if (!ac || !document.documentElement.hasAttribute("manifest")) {
         go();
     } else if (!navigator.onLine) {
-        print("offline — running from cache", "ok");
+        setCache("Modo Offline — Ejecutando desde Cache", true);
         go();
     } else if (ac.status === ac.IDLE) {
-        print("cached", "ok");
+        setCache("Cache listo", true);
         go();
     } else if (ac.status === ac.UPDATEREADY) {
         try { ac.swapCache(); } catch (e) {}
-        print("update downloaded", "ok");
-        waitForTap("UPDATE READY — tap / press X to reload", function () { location.reload(); });
+        setCache("Actualizacion descargada", true);
+        waitForTap("ACTUALIZACIÓN LISTA — Presiona X o toca para reiniciar", function () { location.reload(); });
     } else {
-        print("checking cache...");
-        ac.addEventListener("downloading",
-            function () { print("caching for offline (first run)..."); }, false);
+        setCache("Comprobando Cache...");
+        ac.addEventListener("downloading", function () { setCache("Guardando en Cache para uso Offline..."); }, false);
         ac.addEventListener("progress", function (e) {
             if (e && e.total)
-                print("caching " + Math.round((e.loaded / e.total) * 100) + "%");
+                setCache("Descargando Cache: " + Math.round((e.loaded / e.total) * 100) + "%");
         }, false);
         ac.addEventListener("cached", function () {
-            print("cached for offline use", "ok");
-            waitForTap("CACHED — tap / press X to run", go);
+            setCache("Guardado correctamente en Cache", true);
+            waitForTap("COMPLETADO — Presiona X o toca para iniciar", go);
         }, false);
         ac.addEventListener("updateready", function () {
             try { ac.swapCache(); } catch (e) {}
-            print("update downloaded", "ok");
-            waitForTap("UPDATE READY — tap / press X to reload",
-                       function () { location.reload(); });
+            setCache("Actualizacion instalada", true);
+            waitForTap("ACTUALIZACIÓN LISTA — Presiona X o toca para reiniciar", function () { location.reload(); });
         }, false);
         ac.addEventListener("noupdate", function () {
-            print("cached — offline ready", "ok");
+            setCache("Cache al dia — Modo Offline listo", true);
             go();
         }, false);
         ac.addEventListener("error", function () {
-            print("cache unavailable");
-            waitForTap("CACHE FAILED — tap / press X to run anyway", go);
+            setCache("Error al verificar Cache");
+            waitForTap("FALLO DE CACHE — Presiona X o toca para continuar", go);
         }, false);
         ac.addEventListener("obsolete", function () {
-            print("cache obsolete");
-            waitForTap("CACHE OBSOLETE — tap / press X to run", go);
+            setCache("Cache obsoleto");
+            waitForTap("CACHE OBSOLETO — Presiona X o toca para ejecutar", go);
         }, false);
     }
 })();
 </script>
+</body>
 </html>
