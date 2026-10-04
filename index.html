@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" manifest="cache.appcache">
+<html lang="es">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -176,46 +176,18 @@
 
     var ac = window.applicationCache;
 
-    if (!ac || !document.documentElement.hasAttribute("manifest")) {
-        go();
-        return;
-    }
-
-    // Redirección a cache.html si la cache no se ha guardado aún
-    if (ac.status === ac.UNCACHED) {
-        setCache("Redirigiendo a instalador de caché...");
+    // Si venimos de instalar o si la caché ya está cargada
+    if (ac && ac.status === ac.UNCACHED) {
+        // Redirige sólo una vez a cache.html si la consola no la tiene guardada
+        setCache("Cargando instalador de caché...");
         setTimeout(function() {
             location.replace("cache.html" + location.search);
         }, 500);
         return;
     }
 
-    if (ac.status === ac.IDLE) {
-        setCache("Modo Offline — Caché lista", true);
-        setTimeout(go, 500);
-        return;
-    }
-
-    ac.addEventListener("noupdate", function () {
-        setCache("Modo Offline listo", true);
-        go();
-    }, false);
-
-    ac.addEventListener("error", function () {
-        setCache("Caché lista (Modo Offline)", true);
-        setTimeout(go, 500);
-    }, false);
-
-    ac.addEventListener("cached", function () {
-        setCache("Caché guardada correctamente", true);
-        setTimeout(go, 500);
-    }, false);
-
-    ac.addEventListener("updateready", function () {
-        try { ac.swapCache(); } catch (e) {}
-        setCache("Caché actualizada", true);
-        setTimeout(go, 500);
-    }, false);
+    setCache("Modo Offline — Caché lista", true);
+    setTimeout(go, 500);
 
 })();
 </script>
