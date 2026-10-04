@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" manifest="cache.appcache">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -176,18 +176,57 @@
 
     var ac = window.applicationCache;
 
-    // Si venimos de instalar o si la caché ya está cargada
-    if (ac && ac.status === ac.UNCACHED) {
-        // Redirige sólo una vez a cache.html si la consola no la tiene guardada
-        setCache("Cargando instalador de caché...");
-        setTimeout(function() {
-            location.replace("cache.html" + location.search);
-        }, 500);
+    if (!ac || !document.documentElement.hasAttribute("manifest")) {
+        go();
         return;
     }
 
-    setCache("Modo Offline — Caché lista", true);
-    setTimeout(go, 500);
+    // Si la cache ya está descargada previamente, lanza el exploit directo
+    if (ac.status === ac.IDLE) {
+        setCache("Modo Offline listo", true);
+        setTimeout(go, 300);
+        return;
+    }
+
+    // Manejo directo de eventos de descarga e instalación
+    ac.addEventListener("checking", function () {
+        setCache("Comprobando manifest...");
+    }, false);
+
+    ac.addEventListener("downloading", function () { 
+        setCache("Descargando cache para modo Offline..."); 
+    }, false);
+
+    ac.addEventListener("progress", function (e) {
+        if (e && e.total) {
+            var percent = Math.round((e.loaded / e.total) * 100);
+            setCache("Guardando en Cache: " + percent + "%");
+        } else {
+            setCache("Guardando archivos...");
+        }
+    }, false);
+
+    ac.addEventListener("cached", function () {
+        setCache("¡Cache instalada con éxito!", true);
+        setTimeout(go, 800);
+    }, false);
+
+    ac.addEventListener("updateready", function () {
+        try { ac.swapCache(); } catch (e) {}
+        setCache("Cache actualizada", true);
+        setTimeout(go, 500);
+    }, false);
+
+    ac.addEventListener("noupdate", function () {
+        setCache("Cache al día", true);
+        go();
+    }, false);
+
+    ac.addEventListener("error", function () {
+        // En caso de estar sin conexión a internet, ejecuta desde la cache local
+        setCache("Ejecutando en Modo Offline", true);
+        setTimeout(go, 500);
+    }, false);
 
 })();
 </script>
