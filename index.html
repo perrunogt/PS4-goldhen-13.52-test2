@@ -106,7 +106,7 @@
 
 <div class="card">
   <div class="brand">
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAA3tUlEQVR42t29d5xV5bn3/b3v1XaZmT3MDG2Gjoo0KQJSREHAEvuJYowxia9503NSjq9PmtEkGp9TzJNzTo6aclLURANJNBELIgIqVRAQkI44Q2f67LLqfb9/7L3HYZiBQUly8uzPZ39mZs1ea691XffVfle5BX/Dl9ZaAhKIhBC6eFwIgVJqYBiGI48cOTI6Foudb9v2kCiKqtva2ipbWlpKwjCMKaVMIQSGYYSGYbi+76czmUxDNpsp5pv+" alt="PERRUNOGT Logo">
+    <img src="logo_raw.png" alt="PERRUNOGT Logo" onerror="this.style.display='none'">
     <b>PERRUNOGT HOST</b>
   </div>
 
@@ -132,8 +132,6 @@
     }
 
     var queryString = location.search || "";
-
-    // Tabla de firmwares soportados (13.02, 13.04, 13.50, 13.52)
     var SUPPORTED = { 1302: 1, 1304: 1, 1350: 1, 1352: 1 };
 
     var key = null, fwnum = null;
@@ -183,57 +181,40 @@
         return;
     }
 
-    // Manejo corregido y robusto para ApplicationCache
+    // Redirección a cache.html si la cache no se ha guardado aún
     if (ac.status === ac.UNCACHED) {
-        setCache("Descargando Cache por primera vez...");
-    } else if (ac.status === ac.IDLE) {
-        setCache("Modo Offline / Cache listo", true);
-        go();
-        return;
-    } else if (ac.status === ac.UPDATEREADY) {
-        try { ac.swapCache(); } catch (e) {}
-        setCache("Actualización descargada", true);
-        waitForTap("ACTUALIZACIÓN LISTA — Presiona X o toca para reiniciar", function () { location.reload(); });
+        setCache("Redirigiendo a instalador de caché...");
+        setTimeout(function() {
+            location.replace("cache.html" + location.search);
+        }, 500);
         return;
     }
 
-    ac.addEventListener("downloading", function () { 
-        setCache("Guardando en Cache para uso Offline..."); 
-    }, false);
-
-    ac.addEventListener("progress", function (e) {
-        if (e && e.total) {
-            var percent = Math.round((e.loaded / e.total) * 100);
-            setCache("Descargando Cache: " + percent + "%");
-        } else {
-            setCache("Descargando archivos...");
-        }
-    }, false);
-
-    ac.addEventListener("cached", function () {
-        setCache("Guardado correctamente en Cache", true);
-        waitForTap("COMPLETADO — Presiona X o toca para iniciar", go);
-    }, false);
-
-    ac.addEventListener("updateready", function () {
-        try { ac.swapCache(); } catch (e) {}
-        setCache("Actualización instalada", true);
-        waitForTap("ACTUALIZACIÓN LISTA — Presiona X o toca para reiniciar", function () { location.reload(); });
-    }, false);
+    if (ac.status === ac.IDLE) {
+        setCache("Modo Offline — Caché lista", true);
+        setTimeout(go, 500);
+        return;
+    }
 
     ac.addEventListener("noupdate", function () {
-        setCache("Cache al día — Modo Offline listo", true);
+        setCache("Modo Offline listo", true);
         go();
     }, false);
 
     ac.addEventListener("error", function () {
-        setCache("Cache listo (Offline / Servidor sin cambios)", true);
-        setTimeout(go, 1000);
+        setCache("Caché lista (Modo Offline)", true);
+        setTimeout(go, 500);
     }, false);
 
-    ac.addEventListener("obsolete", function () {
-        setCache("Cache obsoleto");
-        waitForTap("CACHE OBSOLETO — Presiona X o toca para ejecutar", go);
+    ac.addEventListener("cached", function () {
+        setCache("Caché guardada correctamente", true);
+        setTimeout(go, 500);
+    }, false);
+
+    ac.addEventListener("updateready", function () {
+        try { ac.swapCache(); } catch (e) {}
+        setCache("Caché actualizada", true);
+        setTimeout(go, 500);
     }, false);
 
 })();
